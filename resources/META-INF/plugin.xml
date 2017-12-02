@@ -1,0 +1,36 @@
+<idea-plugin>
+    <id>lv.midiana.misc.idea-plugins.deep-dict-completion</id>
+    <name>deep-dict-completion</name>
+    <version>2017.12.02.001</version>
+    <vendor email="safronevev@gmail.com" url="http://midiana.lv/entry/deep-dict-completion">Klesun</vendor>
+
+    <description><![CDATA[
+Currently nothing is implemented, but I plan to:
+<ul>
+  <li>Make it provide completion in vars assigned from function call.</li>
+  <li>Go To Declaration.</li>
+  <li>Specify array keys and reference functions in phpdoc.</li>
+  <li>Preserve type info of object placed in an associative array.</li>
+</ul>
+This plugin gonna extend pycharm dict keys completion and typing. Some people call these dicts heterogeneous btw.<br/>
+    ]]></description>
+
+    <change-notes><![CDATA[
+    <ul>
+      <li>Nothing is done yet</li>
+    </ul>
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="145.0"/>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <completion.contributor order="first" language="Python" implementationClass="org.klesun.deep_dict_completion.entry.DeepKeysCbtr"/>
+        <!--<gotoDeclarationHandler implementation="org.klesun.deep_assoc_completion.go_to_decl_providers.DeepKeysGoToDecl"/>-->
+    </extensions>
+
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.python</depends>
+    <depends>com.intellij.modules.platform</depends>
+</idea-plugin>
