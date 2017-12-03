@@ -33,7 +33,7 @@ def get_segment():
     else:
         segment = {"a": 5, "b": 6}
     flight = segment
-
+    flight['']
     return flight
 
 Fun = namedtuple('Fun', ['closure', 'headers', 'is_secure'])
@@ -88,7 +88,14 @@ def main(gds: str) -> IPricing:
             is_secure=False,
         ),
     }
-    method_dict['get_ichigos_midi_names']
+    method_dict['asd']['get_ichigos_midi_names'] = 123
+    method_dict['qwe'] = {'a':5, 'b': 7}
+    method_dict = {
+        'f': {
+            'g': 5,
+        },
+    }
+    method_dict['f']
 
     return {
 
@@ -98,6 +105,6 @@ def get_book():
     return {'author': 'Vova', 'genre': 'Science Fiction', 'title': 'Sand-Hill'}
 
 book = get_book()
-book['']
+book['Milky Holmes']
 
 main('sabre')
