@@ -1,6 +1,8 @@
 # deep-dict-completion
 Pycharm plugin for deep type inference based dict keys completion
 
+Build: [may be outdated](https://www.dropbox.com/s/a5eki8wfne2zwdd/deep-dict-completion.jar?dl=0)
+
 Idea will be similar to https://github.com/klesun/deep-assoc-completion
 
 Like in phpstorm, idea has _very_ basic key completion - dict var must be defined in same scope as the reference on which you request the completion (and for some reason you must access key with same quotes `'`/`"` as this key was defined).

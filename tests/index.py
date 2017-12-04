@@ -2,6 +2,8 @@ from asyncio import Protocol
 from typing import List, Callable
 from mypy_extensions import TypedDict
 from collections import namedtuple
+import deep_dict_completion_unit_test
+
 
 class Tax(object):
     tax_code: str

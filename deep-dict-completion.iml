@@ -14,7 +14,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Python 3.6.2 (C:\Program Files (x86)\Python36-32\python.exe) interpreter library" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="python" level="project" />
   </component>
 </module>

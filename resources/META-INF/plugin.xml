@@ -33,4 +33,11 @@ This plugin gonna extend pycharm dict keys completion and typing. Some people ca
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.python</depends>
     <depends>com.intellij.modules.platform</depends>
+
+    <actions>
+        <action id="Run Deep Dict Completion Test" class="org.klesun.deep_dict_completion.entry.RunTest" text="Run Deep Dict Completion Test"
+                description="Try to interpret current file as test suite and TESTTESTTEST">
+            <add-to-group group-id="ToolsMenu" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>
