@@ -5,8 +5,10 @@ import com.jetbrains.python.psi.PyExpression;
 import com.jetbrains.python.psi.PyStringLiteralExpression;
 import com.jetbrains.python.psi.types.PyType;
 import org.apache.commons.lang.StringUtils;
+import org.klesun.deep_dict_completion.helpers.FuncCtx;
 import org.klesun.deep_dict_completion.helpers.IFuncCtx;
 import org.klesun.deep_dict_completion.helpers.MultiType;
+import org.klesun.deep_dict_completion.helpers.SearchContext;
 import org.klesun.lang.Lang;
 import org.klesun.lang.Tls;
 
@@ -104,7 +106,9 @@ public class DeepType extends Lang
         LinkedHashMap<String, List<DeepType>> mergedKeys = new LinkedHashMap<>();
         List<DeepType> indexTypes = list();
         LinkedHashMap<Integer, MultiType> tupleTypes = new LinkedHashMap<>();
-        List<String> briefTypes = list();
+        SearchContext search = new SearchContext();
+        IFuncCtx funcCtx = new FuncCtx(search, list());
+        MultiType returnType = new MultiType(L(types).fap(t -> t.returnTypeGetters.fap(rtg -> rtg.apply(funcCtx))));
 
         types.forEach(t -> {
             t.keys.forEach((k,v) -> {
@@ -141,6 +145,8 @@ public class DeepType extends Lang
             return result;
         } else if (indexTypes.size() > 0) {
             return "[" + toJson(indexTypes, level) + "]";
+        } else if (returnType.types.size() > 0) {
+            return "() => " + returnType.toJson();
         } else {
             return "\"unknown\"";
         }

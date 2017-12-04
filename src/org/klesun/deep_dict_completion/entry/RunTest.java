@@ -103,8 +103,7 @@ public class RunTest extends AnAction
             L<String> expectedKeyNames = L(expectedt.tupleTypes.values())
                 .map(tup -> tup.getStringValue());
             expectedKeyNames.fch((keyName, i) -> {
-                MultiType havingKey = actual.getKey(keyName);
-                if (havingKey.types.size() == 0) {
+                if (!actual.hasKey(keyName)) {
                     logger.logErrShort();
                     errors.add(new Error(this, "No such key: '" + keyName + "' at " + i + "-th assertion"));
                 } else {

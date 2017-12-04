@@ -4,6 +4,7 @@ import com.intellij.psi.*;
 import com.jetbrains.python.psi.*;
 import org.klesun.deep_dict_completion.helpers.IFuncCtx;
 import org.klesun.deep_dict_completion.resolvers.ArrCtorRes;
+import org.klesun.deep_dict_completion.resolvers.FuncRes;
 import org.klesun.deep_dict_completion.resolvers.TupRes;
 import org.klesun.deep_dict_completion.resolvers.VarRes;
 import org.klesun.lang.Lang;
@@ -30,9 +31,8 @@ public class DeepTypeResolver extends Lang
                 .map(par -> par.getContainedExpression())
                 .fap(toCast(PyTupleExpression.class))
                 .map(tup -> list(new TupRes(ctx).resolve(tup)))
-//                .map(arr -> list(new ArrCtorRes(ctx).resolve(arr)))
-//            , Tls.cast(FunctionReferenceImpl.class, expr)
-//                .map(call -> new FuncCallRes(ctx).resolve(call).types)
+            , Tls.cast(PyCallExpression.class, expr)
+                .map(call -> new FuncRes(ctx).resolve(call).types)
 //            , Tls.cast(ArrayAccessExpressionImpl.class, expr)
 //                .map(keyAccess -> new ArrAccRes(ctx).resolve(keyAccess).types)
 //            , Tls.cast(FieldReferenceImpl.class, expr)

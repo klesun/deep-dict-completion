@@ -62,6 +62,11 @@ public class MultiType extends Lang
         }
     }
 
+    public boolean hasKey(String keyName)
+    {
+        return types.flt(t -> t.keys.containsKey(keyName)).size() > 0;
+    }
+
     public MultiType getKey(String keyName)
     {
         return new MultiType(list(
@@ -80,6 +85,12 @@ public class MultiType extends Lang
     public MultiType getTupleAt(int index)
     {
         return new MultiType(types.fop(type -> opt(type.tupleTypes.get(index))).fap(v -> v.types));
+    }
+
+    public MultiType getReturnType(IFuncCtx ctx)
+    {
+        L<DeepType> result = types.fap(t -> t.returnTypeGetters.fap(g -> g.apply(ctx)));
+        return new MultiType(result);
     }
 
     public L<String> getKeyNames()

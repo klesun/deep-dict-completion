@@ -1,6 +1,7 @@
 package org.klesun.deep_dict_completion.resolvers;
 
 import com.intellij.psi.PsiElement;
+import com.jetbrains.python.psi.PyFunction;
 import com.jetbrains.python.psi.PyReferenceExpression;
 import org.klesun.deep_dict_completion.*;
 import org.klesun.deep_dict_completion.helpers.IFuncCtx;
@@ -99,6 +100,15 @@ public class VarRes extends Lang
             boolean didSurelyHappen = false;
             Opt<Assign> assignOpt = Opt.fst(list(opt(null)
                 , (new AssRes(ctx)).collectAssignment(refPsi, didSurelyHappen)
+                , Tls.cast(PyFunction.class, refPsi)
+                    .map(func -> {
+                        DeepType type = new DeepType(func);
+                        L<F<IFuncCtx, L<DeepType>>> rtGetters = FuncRes.findFunctionReturns(func)
+                            .map(ret -> ret.getExpression())
+                            .map(retVal -> funcCtx -> funcCtx.findExprType(retVal).types);
+                        type.returnTypeGetters.addAll(rtGetters);
+                        return new Assign(list(), () -> new MultiType(list(type)), didSurelyHappen, func);
+                    })
 //                , assertForeachElement(refPsi)
 //                    .map(elTypes -> new Assign(list(), elTypes, didSurelyHappen, refPsi))
 //                , assertTupleAssignment(refPsi)

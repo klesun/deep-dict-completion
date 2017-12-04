@@ -1,11 +1,14 @@
 package org.klesun.deep_dict_completion.resolvers;
 
 import com.intellij.psi.PsiElement;
+import com.jetbrains.python.psi.PyCallExpression;
 import com.jetbrains.python.psi.PyExpression;
 import com.jetbrains.python.psi.PyFunction;
 import com.jetbrains.python.psi.PyReturnStatement;
 import org.klesun.deep_dict_completion.DeepType;
+import org.klesun.deep_dict_completion.helpers.FuncCtx;
 import org.klesun.deep_dict_completion.helpers.IFuncCtx;
+import org.klesun.deep_dict_completion.helpers.MultiType;
 import org.klesun.lang.Lang;
 import org.klesun.lang.Tls;
 
@@ -33,18 +36,14 @@ public class FuncRes extends Lang
         return result;
     }
 
-    public DeepType resolve(PyFunction func)
+    public MultiType resolve(PyCallExpression funcCall)
     {
-        DeepType result = new DeepType(func);
-        findFunctionReturns(func)
-            .map(ret -> ret.getExpression())
-            .fop(toCast(PyExpression.class))
-            .fch(retVal -> {
-                F<IFuncCtx, L<DeepType>> rtGetter =
-                    (funcCtx) -> funcCtx.findExprType(retVal).types;
-                result.returnTypeGetters.add(rtGetter);
-            });
-        return result;
+        L<PyExpression> args = L(funcCall.getArguments());
+        L<S<MultiType>> argGetters = args.map((psi) -> () -> ctx.findExprType(psi));
+        IFuncCtx funcCtx = ctx.subCtx(argGetters);
+        return opt(funcCall.getCallee())
+            .map(ref -> ctx.findExprType(ref))
+            .map(mt -> mt.getReturnType(funcCtx))
+            .def(MultiType.INVALID_PSI);
     }
-
 }
