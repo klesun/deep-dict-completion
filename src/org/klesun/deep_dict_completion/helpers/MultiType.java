@@ -77,6 +77,11 @@ public class MultiType extends Lang
         ).fap(a -> a));
     }
 
+    public MultiType getTupleAt(int index)
+    {
+        return new MultiType(types.fop(type -> opt(type.tupleTypes.get(index))).fap(v -> v.types));
+    }
+
     public L<String> getKeyNames()
     {
         L<String> names = L();

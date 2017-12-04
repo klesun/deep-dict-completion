@@ -1,10 +1,10 @@
 package org.klesun.deep_dict_completion;
 
 import com.intellij.psi.*;
-import com.jetbrains.python.psi.PyDictLiteralExpression;
-import com.jetbrains.python.psi.PyReferenceExpression;
+import com.jetbrains.python.psi.*;
 import org.klesun.deep_dict_completion.helpers.IFuncCtx;
 import org.klesun.deep_dict_completion.resolvers.ArrCtorRes;
+import org.klesun.deep_dict_completion.resolvers.TupRes;
 import org.klesun.deep_dict_completion.resolvers.VarRes;
 import org.klesun.lang.Lang;
 import org.klesun.lang.Opt;
@@ -26,14 +26,19 @@ public class DeepTypeResolver extends Lang
                 .map(v -> new VarRes(ctx).resolve(v))
             , Tls.cast(PyDictLiteralExpression.class, expr)
                 .map(arr -> list(new ArrCtorRes(ctx).resolve(arr)))
+            , Tls.cast(PyParenthesizedExpression.class, expr)
+                .map(par -> par.getContainedExpression())
+                .fap(toCast(PyTupleExpression.class))
+                .map(tup -> list(new TupRes(ctx).resolve(tup)))
+//                .map(arr -> list(new ArrCtorRes(ctx).resolve(arr)))
 //            , Tls.cast(FunctionReferenceImpl.class, expr)
 //                .map(call -> new FuncCallRes(ctx).resolve(call).types)
 //            , Tls.cast(ArrayAccessExpressionImpl.class, expr)
 //                .map(keyAccess -> new ArrAccRes(ctx).resolve(keyAccess).types)
 //            , Tls.cast(FieldReferenceImpl.class, expr)
 //                .map(fieldRef -> new FieldRes(ctx).resolve(fieldRef).types)
-//            , Tls.cast(StringLiteralExpressionImpl.class, expr)
-//                .map(lit -> list(new DeepType(lit)))
+            , Tls.cast(PyStringLiteralExpression.class, expr)
+                .map(lit -> list(new DeepType(lit)))
 //            , Tls.cast(PhpExpressionImpl.class, expr)
 //                .map(v -> v.getFirstChild())
 //                .fap(toCast(FunctionImpl.class))

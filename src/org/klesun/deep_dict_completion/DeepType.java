@@ -22,6 +22,7 @@ public class DeepType extends Lang
     public final LinkedHashMap<String, Key> keys = new LinkedHashMap<>();
     // possible typeGetters of list element
     public List<DeepType> indexTypes = new ArrayList<>();
+    public LinkedHashMap<Integer, MultiType> tupleTypes = new LinkedHashMap<>();
     // applicable to closures and function names
     // (starting with self::) and [$obj, 'functionName'] tuples
     // slowly migrating returnTypes from constant values to a function
@@ -102,6 +103,7 @@ public class DeepType extends Lang
     {
         LinkedHashMap<String, List<DeepType>> mergedKeys = new LinkedHashMap<>();
         List<DeepType> indexTypes = list();
+        LinkedHashMap<Integer, MultiType> tupleTypes = new LinkedHashMap<>();
         List<String> briefTypes = list();
 
         types.forEach(t -> {
@@ -110,6 +112,13 @@ public class DeepType extends Lang
                     mergedKeys.put(k, list());
                 }
                 mergedKeys.get(k).addAll(v.getTypes());
+            });
+            t.tupleTypes.forEach((k,v) -> {
+                if (tupleTypes.containsKey(k)) {
+                    v = new MultiType(list(v.types, tupleTypes.get(k).types).fap(a -> a));
+                }
+                tupleTypes.remove(k);
+                tupleTypes.put(k, v);
             });
             t.indexTypes.forEach(indexTypes::add);
         });
@@ -122,6 +131,13 @@ public class DeepType extends Lang
             }
             --level;
             result += indent(level) + "}";
+            return result;
+        } else if (tupleTypes.size() > 0) {
+            String result = "(";
+            for (Map.Entry<Integer, MultiType> e: tupleTypes.entrySet()) {
+                result += e.getValue().toJson() + ", ";
+            }
+            result += ")";
             return result;
         } else if (indexTypes.size() > 0) {
             return "[" + toJson(indexTypes, level) + "]";
