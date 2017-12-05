@@ -1,8 +1,10 @@
 package org.klesun.deep_dict_completion.resolvers;
 
 import com.intellij.psi.PsiElement;
+import com.jetbrains.python.psi.PyForPart;
 import com.jetbrains.python.psi.PyFunction;
 import com.jetbrains.python.psi.PyReferenceExpression;
+import com.jetbrains.python.psi.PyTargetExpression;
 import org.klesun.deep_dict_completion.*;
 import org.klesun.deep_dict_completion.helpers.IFuncCtx;
 import org.klesun.deep_dict_completion.helpers.MultiType;
@@ -91,15 +93,20 @@ public class VarRes extends Lang
     {
         List<Assign> revAsses = list();
         L<PsiElement> references = findReferences(variable)
-//            .flt(refPsi -> ScopeFinder.didPossiblyHappen(refPsi, variable))
             ;
 
         for (int i = references.size() - 1; i >= 0; --i) {
             PsiElement refPsi = references.get(i);
-//            boolean didSurelyHappen = ScopeFinder.didSurelyHappen(refPsi, variable);
             boolean didSurelyHappen = false;
             Opt<Assign> assignOpt = Opt.fst(list(opt(null)
-                , (new AssRes(ctx)).collectAssignment(refPsi, didSurelyHappen)
+                , Tls.cast(PyTargetExpression.class, refPsi)
+                    .map(target -> target.getParent())
+                    .fap(toCast(PyForPart.class))
+                    .map(forPart -> forPart.getSource())
+                    .map(src -> {
+                        MultiType mt = ctx.findExprType(src).getEl();
+                        return new Assign(list(), () -> mt, didSurelyHappen, src);
+                    })
                 , Tls.cast(PyFunction.class, refPsi)
                     .map(func -> {
                         DeepType type = new DeepType(func);
@@ -109,6 +116,7 @@ public class VarRes extends Lang
                         type.returnTypeGetters.addAll(rtGetters);
                         return new Assign(list(), () -> new MultiType(list(type)), didSurelyHappen, func);
                     })
+                , (new AssRes(ctx)).collectAssignment(refPsi, didSurelyHappen)
 //                , assertForeachElement(refPsi)
 //                    .map(elTypes -> new Assign(list(), elTypes, didSurelyHappen, refPsi))
 //                , assertTupleAssignment(refPsi)

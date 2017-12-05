@@ -24,6 +24,8 @@ public class DeepTypeResolver extends Lang
                 .map(v -> new VarRes(ctx).resolve(v))
             , Tls.cast(PyDictLiteralExpression.class, expr)
                 .map(arr -> list(new ArrCtorRes(ctx).resolve(arr)))
+            , Tls.cast(PyListLiteralExpression.class, expr)
+                .map(arr -> list(new ListRes(ctx).resolve(arr)))
             , Tls.cast(PyParenthesizedExpression.class, expr)
                 .map(par -> par.getContainedExpression())
                 .fap(toCast(PyTupleExpression.class))

@@ -56,3 +56,42 @@ def provide_nested_dict():
         (witcher['swords'], ('silver', 'steel')),
         (witcher['swords']['silver'], ('name', 'sharpness')),
     )
+
+def provide_loop():
+    last_hero = None
+    heroes = [
+        {'name': 'Riki', 'role': 'carry'},
+        {'name': 'Shadow Fiend', 'role': 'nuker'}
+    ]
+    for hero in heroes:
+        hero['']
+        last_hero = hero
+    return (
+        (last_hero, ('name', 'role')),
+    )
+
+# not implemented yet follow
+
+def provide_assigned_keys():
+    witcher = {'name': 'Heralt', 'role': 'Protagonist'}
+    witcher['found'] = 'Ciri'
+    witcher['']
+    return (
+        # (witcher, ('name', 'role', 'found')),
+    )
+
+def provide_generator():
+    heroes = [
+        {'name': 'Riki', 'items': [
+            {'name': 'Shadow Blade', 'price': 2600},
+            {'name': 'Sage and Yasha', 'price': 4200},
+        ]},
+        {'name': 'Shadow Fiend', 'items': []},
+    ]
+    cheap_items = [item
+        for hero in heroes if hero['name'] != 'Shadow Fiend'
+        for item in hero['items'] if item['price'] < 3000
+    ]
+    return (
+        # (cheap_items[0], ('name', 'price')),
+    )
