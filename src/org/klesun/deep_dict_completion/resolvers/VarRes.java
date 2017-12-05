@@ -1,10 +1,7 @@
 package org.klesun.deep_dict_completion.resolvers;
 
 import com.intellij.psi.PsiElement;
-import com.jetbrains.python.psi.PyForPart;
-import com.jetbrains.python.psi.PyFunction;
-import com.jetbrains.python.psi.PyReferenceExpression;
-import com.jetbrains.python.psi.PyTargetExpression;
+import com.jetbrains.python.psi.*;
 import org.klesun.deep_dict_completion.*;
 import org.klesun.deep_dict_completion.helpers.IFuncCtx;
 import org.klesun.deep_dict_completion.helpers.MultiType;
@@ -107,6 +104,15 @@ public class VarRes extends Lang
                         MultiType mt = ctx.findExprType(src).getEl();
                         return new Assign(list(), () -> mt, didSurelyHappen, src);
                     })
+                , Tls.cast(PyTargetExpression.class, refPsi)
+                    .map(target -> target.getParent())
+                    .fap(toCast(PyListCompExpression.class))
+                    .fap(listComp -> L(listComp.getForComponents())
+                        .flt(forCmp -> refPsi.isEquivalentTo(forCmp.getIteratorVariable()))
+                        .fst()
+                        .map(forCmp -> forCmp.getIteratedList())
+                        .fap(lst -> opt(ctx.findExprType(lst).getEl())
+                            .map(mt -> new Assign(list(), () -> mt, didSurelyHappen, lst))))
                 , Tls.cast(PyFunction.class, refPsi)
                     .map(func -> {
                         DeepType type = new DeepType(func);

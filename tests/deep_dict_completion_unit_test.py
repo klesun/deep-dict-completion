@@ -72,14 +72,6 @@ def provide_loop():
 
 # not implemented yet follow
 
-def provide_assigned_keys():
-    witcher = {'name': 'Heralt', 'role': 'Protagonist'}
-    witcher['found'] = 'Ciri'
-    witcher['']
-    return (
-        # (witcher, ('name', 'role', 'found')),
-    )
-
 def provide_generator():
     heroes = [
         {'name': 'Riki', 'items': [
@@ -92,6 +84,16 @@ def provide_generator():
         for hero in heroes if hero['name'] != 'Shadow Fiend'
         for item in hero['items'] if item['price'] < 3000
     ]
+    for item in cheap_items:
+        item['']
     return (
         # (cheap_items[0], ('name', 'price')),
+    )
+
+def provide_assigned_keys():
+    witcher = {'name': 'Heralt', 'role': 'Protagonist'}
+    witcher['found'] = 'Ciri'
+    witcher['']
+    return (
+        # (witcher, ('name', 'role', 'found')),
     )
