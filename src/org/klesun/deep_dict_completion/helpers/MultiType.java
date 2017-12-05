@@ -67,6 +67,20 @@ public class MultiType extends Lang
         return types.flt(t -> t.keys.containsKey(keyName)).size() > 0;
     }
 
+    public L<PsiElement> getKeyPsi(String keyName)
+    {
+        return list(
+            // if keyName is a constant string - return type of this key only
+            types.flt(t -> keyName != null)
+                .fop(type -> Lang.getKey(type.keys, keyName))
+                .map(v -> v.definition),
+            // if keyName is a var - return types of all keys
+            types.flt(t -> keyName == null)
+                .fap(t -> L(t.keys.values()))
+                .map(v -> v.definition)
+        ).fap(a -> a);
+    }
+
     public MultiType getKey(String keyName)
     {
         return new MultiType(list(

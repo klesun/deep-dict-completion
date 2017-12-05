@@ -35,7 +35,7 @@ This plugin extends pycharm dict keys completion and typing to something usable.
 
     <extensions defaultExtensionNs="com.intellij">
         <completion.contributor order="first" language="Python" implementationClass="org.klesun.deep_dict_completion.entry.DeepKeysCbtr"/>
-        <!--<gotoDeclarationHandler implementation="org.klesun.deep_assoc_completion.go_to_decl_providers.DeepKeysGoToDecl"/>-->
+        <gotoDeclarationHandler implementation="org.klesun.deep_dict_completion.go_to_decl_providers.DeepKeysGoToDecl"/>
     </extensions>
 
     <depends>com.intellij.modules.lang</depends>
