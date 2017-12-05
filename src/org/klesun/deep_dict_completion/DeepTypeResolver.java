@@ -3,6 +3,7 @@ package org.klesun.deep_dict_completion;
 import com.intellij.psi.*;
 import com.jetbrains.python.psi.*;
 import org.klesun.deep_dict_completion.helpers.IFuncCtx;
+import org.klesun.deep_dict_completion.helpers.MultiType;
 import org.klesun.deep_dict_completion.resolvers.*;
 import org.klesun.lang.Lang;
 import org.klesun.lang.Opt;
@@ -34,6 +35,10 @@ public class DeepTypeResolver extends Lang
                 .map(call -> new FuncRes(ctx).resolve(call).types)
             , Tls.cast(PySubscriptionExpression.class, expr)
                 .map(keyAccess -> new ArrAccRes(ctx).resolve(keyAccess).types)
+            , Tls.cast(PyListCompExpression.class, expr)
+                .map(comp -> comp.getResultExpression())
+                .map(res -> ctx.findExprType(res).getInArray(res))
+                .map(t -> list(t))
 //            , Tls.cast(FieldReferenceImpl.class, expr)
 //                .map(fieldRef -> new FieldRes(ctx).resolve(fieldRef).types)
             , Tls.cast(PyStringLiteralExpression.class, expr)
