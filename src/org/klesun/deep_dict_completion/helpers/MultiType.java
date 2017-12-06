@@ -5,6 +5,7 @@ import com.jetbrains.python.psi.types.PyType;
 import com.jetbrains.python.psi.types.PyUnionType;
 import org.klesun.deep_dict_completion.DeepType;
 import org.klesun.lang.Lang;
+import org.klesun.lang.Tls;
 
 import java.util.HashSet;
 
@@ -118,6 +119,32 @@ public class MultiType extends Lang
             }
         });
         return names;
+    }
+
+    public String getBriefTypeText()
+    {
+        L<String> briefTypes = list();
+        L<String> keyNames = getKeyNames();
+        if (keyNames.size() > 0) {
+            briefTypes.add("{" + Tls.implode(", ", keyNames.map(k -> k + ":")) + "}");
+        }
+        L<String> strvals = types.fop(t -> opt(t.stringValue));
+        if (strvals.size() > 0) {
+            briefTypes.add(Tls.implode("|", strvals.map(s -> "'" + s + "'")));
+        }
+        int tupleCnt = types.fap(t -> L(t.tupleTypes.keySet()))
+            .rdc((a,b) -> Math.max(a, b), 0);
+        if (tupleCnt > 0) {
+            briefTypes.add("(" + Tls.implode(", ", Tls.range(0, tupleCnt).map(i -> "a" + i)) + ")");
+        }
+        if (types.any(t -> t.indexTypes.size() > 0)) {
+            briefTypes.add("[...]");
+        }
+        briefTypes.addAll(types.fop(t -> opt(t.briefType)));
+        String fullStr = Tls.implode("|", briefTypes);
+        String truncated = Tls.substr(fullStr, 0, 40);
+        return truncated.length() == fullStr.length()
+            ? truncated : truncated + "...";
     }
 
     public String toJson()

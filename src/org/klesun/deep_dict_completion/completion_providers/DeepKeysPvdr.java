@@ -37,31 +37,29 @@ public class DeepKeysPvdr extends CompletionProvider<CompletionParameters>
         SearchContext search = new SearchContext().setDepth(30);
         FuncCtx funcCtx = new FuncCtx(search, list());
 
-        L<String> keys = opt(parameters.getPosition().getParent())
+        MultiType dictType = opt(parameters.getPosition().getParent())
             .fap(toCast(PyStringLiteralExpressionImpl.class))
             .map(lit -> lit.getParent())
             .fap(toCast(PySubscriptionExpression.class))
             .map(sub -> sub.getOperand())
-            .map(var -> {
-                MultiType mt = funcCtx.findExprType(var);
-                return mt.getKeyNames();
-            })
-            .def(list());
+            .map(var -> funcCtx.findExprType(var))
+            .def(MultiType.INVALID_PSI);
+        L<String> names = dictType.getKeyNames();
 
-        keys.map(key -> LookupElementBuilder.create(key)
+        names.map(key -> LookupElementBuilder.create(key)
                 .bold()
                 .withIcon(PythonIcons.Python.PropertyGetter)
-                .withTypeText("IAnime"))
+                .withTypeText(dictType.getKey(key).getBriefTypeText()))
             .map((look, i) -> PrioritizedLookupElement.withPriority(look, 3000 - i))
             .fch(result::addElement);
 
         Set<String> suggested = new HashSet<>(list(
-            keys.map(k -> "'" + k + "'"),
-            keys.map(k -> "\"" + k + "\"")
+            names.map(k -> "'" + k + "'"),
+            names.map(k -> "\"" + k + "\"")
         ).fap(a -> a));
 
         result.runRemainingContributors(parameters, otherSourceResult -> {
-            // remove dupe buil-in suggestions
+            // remove dupe built-in suggestions
             LookupElement lookup = otherSourceResult.getLookupElement();
             if (!suggested.contains(lookup.getLookupString())) {
                 result.addElement(lookup);

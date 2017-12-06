@@ -23,7 +23,7 @@ public class DeepType extends Lang
     // keys and typeGetters of associative array
     public final LinkedHashMap<String, Key> keys = new LinkedHashMap<>();
     // possible typeGetters of list element
-    public List<DeepType> indexTypes = new ArrayList<>();
+    public L<DeepType> indexTypes = list();
     public LinkedHashMap<Integer, MultiType> tupleTypes = new LinkedHashMap<>();
     // applicable to closures and function names
     // (starting with self::) and [$obj, 'functionName'] tuples
@@ -32,6 +32,7 @@ public class DeepType extends Lang
     public final L<F<IFuncCtx, L<DeepType>>> returnTypeGetters = L();
     public final String stringValue;
     public final PsiElement definition;
+    public String briefType = null;
 
     DeepType(PsiElement definition, String stringValue)
     {

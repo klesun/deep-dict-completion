@@ -54,6 +54,14 @@ public class DeepTypeResolver extends Lang
 //                    .map(num -> list(new DeepType(casted, num))))
 //            // leave rest to MiscRes
 //            , new MiscRes(ctx).resolve(expr)
+
+            // fallback to just built-in type with a name
+            , Tls.cast(PyExpression.class, expr)
+                .map(ex -> {
+                    DeepType dt = new DeepType(ex);
+                    dt.briefType = Tls.substr(expr.getText(), 0, 8);
+                    return list(dt);
+                })
         )).map(ts -> L(ts));
     }
 }

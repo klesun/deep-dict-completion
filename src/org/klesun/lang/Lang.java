@@ -247,6 +247,11 @@ public class Lang
             return fap((el, i) -> flatten.apply(el));
         }
 
+        public boolean any(Predicate<T> pred)
+        {
+            return flt(pred).size() > 0;
+        }
+
         public <Tnew> L<Tnew> fap(F2<T, Integer, List<Tnew>> flatten)
         {
             List<Tnew> result = list();
