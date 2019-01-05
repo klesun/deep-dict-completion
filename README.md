@@ -1,5 +1,5 @@
-# deep-dict-completion
-Pycharm plugin for deep type inference based dict keys completion
+
+Jetbrains repository: https://plugins.jetbrains.com/plugin/10247-deep-dict-completion
 
 Build: [may be outdated](https://www.dropbox.com/s/a5eki8wfne2zwdd/deep-dict-completion.jar?dl=0)
 
