@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>lv.midiana.misc.idea-plugins.deep-dict-completion</id>
     <name>deep-dict-completion</name>
-    <version>2017.12.05.001</version>
+    <version>2019.08.17.001</version>
     <vendor email="safronevev@gmail.com" url="http://midiana.lv/entry/deep-dict-completion">Klesun</vendor>
 
     <description><![CDATA[
@@ -23,9 +23,8 @@ This plugin extends pycharm dict keys completion and typing to something usable.
 
     <change-notes><![CDATA[
     <ul>
-      <li>Completion in for loops and generators</li>
-      <li>Completion from func result stored in a var</li>
-      <li>Completion from dict stored in a var</li>
+      <li>(test deploy)</li>
+      <li>Show the bluish icon on completion options, same as in other plugins</li>
     </ul>
     ]]>
     </change-notes>

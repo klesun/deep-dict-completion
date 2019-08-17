@@ -20,6 +20,8 @@ import org.klesun.deep_dict_completion.helpers.SearchContext;
 import org.klesun.lang.Lang.L;
 import org.klesun.lang.Opt;
 
+import javax.swing.*;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +31,9 @@ import static org.klesun.lang.Lang.toCast;
 
 public class DeepKeysPvdr extends CompletionProvider<CompletionParameters>
 {
+    URL imgURL = getClass().getResource("../icons/deep_16_ruby2.png");
+    ImageIcon icon = new ImageIcon(imgURL);
+
     protected void addCompletions(
         @NotNull CompletionParameters parameters,
         ProcessingContext processingContext,
@@ -48,7 +53,7 @@ public class DeepKeysPvdr extends CompletionProvider<CompletionParameters>
 
         names.map(key -> LookupElementBuilder.create(key)
                 .bold()
-                .withIcon(PythonIcons.Python.PropertyGetter)
+                .withIcon(icon)
                 .withTypeText(dictType.getKey(key).getBriefTypeText()))
             .map((look, i) -> PrioritizedLookupElement.withPriority(look, 3000 - i))
             .fch(result::addElement);
